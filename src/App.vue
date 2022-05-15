@@ -1,6 +1,10 @@
 <template>
   <div class = "container">
-    <Header title = "Task List" />
+    <Header @toggle-add-task="toggleAddTask"
+    title = "Task List" :showAddTask="showAddTask"/>
+    <div v-show="showAddTask">
+      <AddTask @add-task="addTask" />
+    </div>
     <Tasks @toggle-reminder="toggleReminder"
     @delete-task="deleteTask" :tasks="tasks" />
   </div>
@@ -9,19 +13,28 @@
 <script>
 import Header from './components/Header'
 import Tasks from './components/Tasks'
+import AddTask from './components/AddTask'
 
 export default {
   name: 'App',
   components: {
     Header,
     Tasks,
+    AddTask,
   },
   data() {
     return {
-      tasks: []
+      tasks: [],
+      showAddTask: false
     }
   },
   methods: {
+    toggleAddTask() {
+        this.showAddTask = !this.showAddTask
+    },
+    addTask(task) {
+        this.tasks = [...this.tasks, task]
+    },
     deleteTask(id) {
       if(confirm('Are you sure?')) {
         this.tasks = this.tasks.filter((task) => task.id !== id)
@@ -96,6 +109,15 @@ body {
 
 .btn:focus {
   outline:none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
 }
 
 </style>
